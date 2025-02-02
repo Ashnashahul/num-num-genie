@@ -1,2 +1,2 @@
 # num-num-genie
-A tool  that gives you recipes..
+Nom Nom Genie is a unique recipe generator website aimed to provide you with the solution for the challenge of deciding what to cook. If you’re seeking what to eat next, wanting recipes to cater to your mood, or excited to try out new flavors from different cultures, Nom Nom Genie is right for you. Our system not only offers tasty meal suggestions depending on what ingredients you have but also incorporates a unique feature that enables you to discover different meals based on what you want to feel. Moreover, our world cuisine explorer will take you on a journey where you experience different cultures without leaving your kitchen.
