@@ -81,7 +81,7 @@ For Software:
 
 ###project demo
 # video 
-(./https://www.loom.com/share/07e733fc52704bdfa1f35158ca25d3e7?sid=b2a18945-11f6-4290-b28a-58ae0d84f7de)
+(https://www.loom.com/share/4955c61298d8408f887dff23cb584d80?sid=381858cb-3b62-4ad7-8aef-fd6a388ca2f2)
 
 
 ## Team Contributions
