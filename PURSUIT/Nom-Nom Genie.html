@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nom-Nom Genie 🧞‍♂️</title>
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #2C3E50;
+            --light: #F7F9F9;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .input-group {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff5252;
+        }
+
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .tag {
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tag button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .result {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .cuisine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .cuisine-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .cuisine-card:hover {
+            transform: scale(1.05);
+        }
+
+        .recipe {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧞‍♂️ Nom-Nom Genie</h1>
+        <p>Your magical food decision helper</p>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>🏠 Cook with What You Have</h2>
+            <div class="input-group">
+                <input type="text" id="ingredientInput" placeholder="Enter an ingredient...">
+                <button onclick="addIngredient()">Add</button>
+            </div>
+            <div class="tag-container" id="ingredients"></div>
+            <button onclick="findRecipe()">Find Magic Recipe</button>
+            <div id="recipeResult" class="result"></div>
+        </div>
+
+        <div class="card">
+            <h2>🎭 Mood Food</h2>
+            <div class="input-group">
+                <select id="moodSelect">
+                    <option value="">How are you feeling?</option>
+                    <option value="happy">😊 Happy</option>
+                    <option value="stressed">😓 Stressed</option>
+                    <option value="tired">😴 Tired</option>
+                    <option value="energetic">⚡ Energetic</option>
+                    <option value="romantic">❤️ Romantic</option>
+                </select>
+                <button onclick="suggestByMood()">Get Suggestion</button>
+            </div>
+            <div id="moodResult" class="result"></div>
+        </div>
+
+        <div class="card">
+            <h2>🌎 World Cuisine Explorer</h2>
+            <div class="cuisine-grid">
+                <div class="cuisine-card" onclick="exploreCuisine('italian')">🇮🇹 Italian</div>
+                <div class="cuisine-card" onclick="exploreCuisine('japanese')">🇯🇵 Japanese</div>
+                <div class="cuisine-card" onclick="exploreCuisine('indian')">🇮🇳 Indian</div>
+                <div class="cuisine-card" onclick="exploreCuisine('mexican')">🇲🇽 Mexican</div>
+                <div class="cuisine-card" onclick="exploreCuisine('french')">🇫🇷 French</div>
+                <div class="cuisine-card" onclick="exploreCuisine('chinese')">🇨🇳 Chinese</div>
+            </div>
+            <div id="cuisineResult" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        let ingredients = [];
+
+        const recipeDatabase = {
+            "Pasta Primavera": {
+                ingredients: ['pasta', 'tomatoes', 'zucchini', 'bell peppers', 'olive oil', 'garlic'],
+                instructions: "1. Cook pasta al dente\n2. Sauté vegetables in olive oil and garlic\n3. Combine and season",
+                mood: ["happy", "energetic"]
+            },
+            "Chicken Noodle Soup": {
+                ingredients: ['chicken', 'noodles', 'carrots', 'celery', 'onion', 'garlic'],
+                instructions: "1. Cook chicken with vegetables\n2. Add noodles\n3. Simmer until done",
+                mood: ["stressed", "tired"]
+            },
+            "Chocolate Lava Cake": {
+                ingredients: ['chocolate', 'butter', 'eggs', 'flour', 'sugar'],
+                instructions: "1. Melt chocolate and butter\n2. Mix with other ingredients\n3. Bake until edges are set",
+                mood: ["romantic", "happy"]
+            },
+            "Green Power Bowl": {
+                ingredients: ['quinoa', 'avocado', 'spinach', 'chickpeas', 'olive oil'],
+                instructions: "1. Cook quinoa\n2. Prepare vegetables\n3. Assemble bowl",
+                mood: ["energetic", "tired"]
+            },
+            "Creamy Mac & Cheese": {
+                ingredients: ['macaroni', 'cheese', 'milk', 'butter', 'flour'],
+                instructions: "1. Cook macaroni\n2. Make cheese sauce\n3. Combine and bake",
+                mood: ["stressed", "happy"]
+            },
+            "Strawberry Chocolate Fondue": {
+                ingredients: ['chocolate', 'strawberries', 'cream', 'butter'],
+                instructions: "1. Melt chocolate with cream\n2. Prepare fruit\n3. Dip and enjoy",
+                mood: ["romantic"]
+            }
+        };
+
+        function addIngredient() {
+            const input = document.getElementById('ingredientInput');
+            const ingredient = input.value.trim().toLowerCase();
+            if (ingredient && !ingredients.includes(ingredient)) {
+                ingredients.push(ingredient);
+                updateIngredients();
+                input.value = '';
+            }
+        }
+
+        function updateIngredients() {
+            const container = document.getElementById('ingredients');
+            container.innerHTML = ingredients.map(ing => 
+                `<span class="tag">${ing}<button onclick="removeIngredient('${ing}')">&times;</button></span>`
+            ).join('');
+        }
+
+        function removeIngredient(ingredient) {
+            ingredients = ingredients.filter(i => i !== ingredient);
+            updateIngredients();
+        }
+
+        function findMatchingRecipes() {
+            const matches = [];
+            for (let [name, recipe] of Object.entries(recipeDatabase)) {
+                const matchedIngredients = recipe.ingredients.filter(ing => 
+                    ingredients.some(userIng => ing.includes(userIng) || userIng.includes(ing))
+                );
+                if (matchedIngredients.length > 0) {
+                    matches.push({
+                        name,
+                        recipe,
+                        matchCount: matchedIngredients.length,
+                        matchPercentage: (matchedIngredients.length / recipe.ingredients.length) * 100
+                    });
+                }
+            }
+            return matches.sort((a, b) => b.matchCount - a.matchCount);
+        }
+
+        function findRecipe() {
+            const result = document.getElementById('recipeResult');
+            if (ingredients.length === 0) {
+                result.innerHTML = "Please add some ingredients first! 🧐";
+                return;
+            }
+
+            const matches = findMatchingRecipes();
+            
+            if (matches.length > 0) {
+                const bestMatch = matches[0];
+                result.innerHTML = `
+                    <div class="recipe">
+                        <h3>✨ ${bestMatch.name}</h3>
+                        <p><strong>Match: </strong>${bestMatch.matchPercentage.toFixed(1)}% of ingredients</p>
+                        <p><strong>You'll need:</strong> ${bestMatch.recipe.ingredients.join(', ')}</p>
+                        <p><strong>Instructions:</strong></p>
+                        <pre>${bestMatch.recipe.instructions}</pre>
+                        ${bestMatch.matchPercentage < 100 ? 
+                            `<p>Missing ingredients: ${bestMatch.recipe.ingredients
+                                .filter(ing => !ingredients.some(userIng => ing.includes(userIng) || userIng.includes(ing)))
+                                .join(', ')}</p>` : ''
+                        }
+                    </div>
+                `;
+            } else {
+                result.innerHTML = "No matching recipes found. Try adding different ingredients! 🔍";
+            }
+        }
+
+        function suggestByMood() {
+            const mood = document.getElementById('moodSelect').value;
+            const result = document.getElementById('moodResult');
+            
+            if (!mood) {
+                result.innerHTML = "Please select your mood first! 😊";
+                return;
+            }
+
+            // Filter recipes by mood and available ingredients
+            const moodRecipes = Object.entries(recipeDatabase)
+                .filter(([_, recipe]) => recipe.mood.includes(mood))
+                .map(([name, recipe]) => {
+                    const matchedIngredients = recipe.ingredients.filter(ing => 
+                        ingredients.some(userIng => ing.includes(userIng) || userIng.includes(ing))
+                    );
+                    return {
+                        name,
+                        recipe,
+                        matchCount: matchedIngredients.length,
+                        matchPercentage: (matchedIngredients.length / recipe.ingredients.length) * 100
+                    };
+                })
+                .sort((a, b) => b.matchCount - a.matchCount);
+
+            if (moodRecipes.length > 0) {
+                const bestMatch = moodRecipes[0];
+                result.innerHTML = `
+                    <div class="recipe">
+                        <h3>✨ ${bestMatch.name}</h3>
+                        <p>Perfect for your ${mood} mood!</p>
+                        ${ingredients.length > 0 ? 
+                            `<p><strong>Match: </strong>${bestMatch.matchPercentage.toFixed(1)}% of ingredients</p>` : ''
+                        }
+                        <p><strong>You'll need:</strong> ${bestMatch.recipe.ingredients.join(', ')}</p>
+                        <p><strong>Instructions:</strong></p>
+                        <pre>${bestMatch.recipe.instructions}</pre>
+                        ${ingredients.length > 0 && bestMatch.matchPercentage < 100 ? 
+                            `<p>Missing ingredients: ${bestMatch.recipe.ingredients
+                                .filter(ing => !ingredients.some(userIng => ing.includes(userIng) || userIng.includes(ing)))
+                                .join(', ')}</p>` : ''
+                        }
+                    </div>
+                `;
+            } else {
+                result.innerHTML = "No recipes found for this mood. Try a different mood! 🤔";
+            }
+        }
+
+        const cuisines = {
+            italian: ["Margherita Pizza", "Pasta Carbonara", "Risotto"],
+            japanese: ["Sushi", "Ramen", "Tempura"],
+            indian: ["Butter Chicken", "Biryani", "Palak Paneer"],
+            mexican: ["Tacos", "Enchiladas", "Guacamole"],
+            french: ["Coq au Vin", "Ratatouille", "Crème Brûlée"],
+            chinese: ["Kung Pao Chicken", "Dim Sum", "Mapo Tofu"]
+        };
+
+        function exploreCuisine(cuisine) {
+            const result = document.getElementById('cuisineResult');
+            const dishes = cuisines[cuisine];
+            const dish = dishes[Math.floor(Math.random() * dishes.length)];
+            result.innerHTML = `
+                <div class="recipe">
+                    <h3>✨ Try this ${cuisine.charAt(0).toUpperCase() + cuisine.slice(1)} dish:</h3>
+                    <p>${dish}</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
