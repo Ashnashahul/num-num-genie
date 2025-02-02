@@ -79,7 +79,9 @@ For Software:
 
 ![Screenshot2](./screenshots/Screenshot%202025-02-02%20085406.png)
 
-
+###project demo
+# video 
+(./https://www.loom.com/share/07e733fc52704bdfa1f35158ca25d3e7?sid=b2a18945-11f6-4290-b28a-58ae0d84f7de)
 
 
 ## Team Contributions
