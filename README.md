@@ -86,7 +86,7 @@ For Software:
 
 ## Team Contributions
 - Aliyya saiju: frontend developing
-- Ashna Shahul: backened developing
+- Ashna Shahul: frontend developing
 - Reema Abdul Rasheed: content writing and recipie curator
 
 ---
